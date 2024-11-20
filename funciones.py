@@ -4,6 +4,9 @@ from os import system
 from models.ingredientes import Ingredientes
 from models.productos import Productos
 from models.productosingredientes import Productosingredientes
+from models import db
+
+
 
 
 def validacion_sano(numero_calorias, es_vegetariano):
@@ -12,13 +15,20 @@ def validacion_sano(numero_calorias, es_vegetariano):
     else:
         return False
     
-        
+
+def abastecer(tipo_ingrediente, inventario):
+
+    if tipo_ingrediente == "Base":
+        inventario += 5
+    else:
+        inventario += 10
+    return inventario
+
 
 def conteo_calorias(self, numero_calorias):
-    if not isinstance(numero_calorias, list):  # Verificamos que sea una lista
+    if not isinstance(numero_calorias, list): 
         raise ValueError("El parámetro 'numero_calorias' debe ser una lista de números.")
     
-    # Calculamos la suma de las calorías y aplicamos el factor de reducción
     conteo_calorias_producto = round(sum(numero_calorias) * 0.95, 2)
     
     return conteo_calorias_producto
@@ -26,19 +36,15 @@ def conteo_calorias(self, numero_calorias):
 
 
 def costo_produccion_producto(producto_id):
-    # Fetch the product based on its ID
     producto = Productos.query.get(producto_id)
     
     if not producto:
-        return None  # Handle case where product does not exist
+        return None  
     
-    # Start with the price of the product itself
     costo_total = producto.precio
     
-    # Fetch all related product-ingredient relationships
     ingredientes_relacionados = Productosingredientes.query.filter_by(id_producto=producto_id).all()
     
-    # Add the price of each ingredient to the total cost
     for relacion in ingredientes_relacionados:
         ingrediente = Ingredientes.query.get(relacion.id_ingrediente)
         if ingrediente:
@@ -72,7 +78,8 @@ def producto_mas_rentable():
     return producto_max_rentabilidad, rentabilidad[producto_max_rentabilidad_id]
 
         
-    
+
+
         
             
             

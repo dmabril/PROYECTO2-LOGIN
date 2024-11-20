@@ -1,12 +1,11 @@
 
-
-from flask import Flask, render_template
-from models import db
+from models import db  
+from flask import Flask, render_template, redirect,url_for
 from models.heladeria import Heladeria
 from models.productosingredientes import Productosingredientes
 from models.productos import Productos
 from models.ingredientes import Ingredientes
-from funciones import validacion_sano, costo_produccion_producto,producto_mas_rentable
+from funciones import validacion_sano, costo_produccion_producto,producto_mas_rentable,abastecer
 
 
 # Inicializamos la base de datos
@@ -92,6 +91,28 @@ def ingredientes_view():
     # Pasamos la lista de ingredientes y la función validacion_sano a la plantilla
     return render_template('ingredientes.html', ingredientes=ingredientes_lista, validacion_sano=validacion_sano)
 
+
+@app.route('/abastecer/<int:id_ingrediente>', methods=['POST'])
+def abastecer_ingrediente(id_ingrediente):
+    # Buscar el ingrediente en la base de datos
+    ingrediente = Ingredientes.query.get(id_ingrediente)
+    
+    if ingrediente:
+        # Llamamos a la función abastecer para aumentar el inventario
+        nuevo_inventario = abastecer(ingrediente.tipo_ingrediente, ingrediente.inventario)
+        ingrediente.inventario = nuevo_inventario
+        
+        # Guardamos los cambios en la base de datos
+        db.session.commit()
+
+    # Redirigir a la vista de ingredientes
+    return redirect(url_for('ingredientes_view'))
+
+# Ejecutar la aplicación
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 # Inicializar la base de datos con datos predeterminados
 if __name__ == '__main__':
     # Crear la base de datos si no existe
@@ -122,19 +143,19 @@ if __name__ == '__main__':
         if not Ingredientes.query.first():
             ingredientes_iniciales = [
                 #Bases
-                Ingredientes(id_ingrediente=1, nombre="Helado de Fresa", precio=1200, numero_calorias=300,es_vegetarianos=1,sabor="Fresa", tipo_ingrediente= "Base"),
-                Ingredientes(id_ingrediente=2, nombre="Helado de Mandarina", precio=1200, numero_calorias=280,es_vegetarianos=1,sabor="Mandarina", tipo_ingrediente= "Base"),
-                Ingredientes(id_ingrediente=3, nombre="Helado de Chocolate", precio=1500, numero_calorias=400,es_vegetarianos=0,sabor="Chocolate", tipo_ingrediente= "Base"),
-                Ingredientes(id_ingrediente=4, nombre="Helado de Vainilla", precio=1200, numero_calorias=300,es_vegetarianos=0,sabor="Vainilla", tipo_ingrediente= "Base"),
+                Ingredientes(id_ingrediente=1, nombre="Helado de Fresa", precio=1200, numero_calorias=300,es_vegetarianos=1,sabor="Fresa", tipo_ingrediente= "Base",inventario=50.0),
+                Ingredientes(id_ingrediente=2, nombre="Helado de Mandarina", precio=1200, numero_calorias=280,es_vegetarianos=1,sabor="Mandarina", tipo_ingrediente= "Base",inventario=50.0),
+                Ingredientes(id_ingrediente=3, nombre="Helado de Chocolate", precio=1500, numero_calorias=400,es_vegetarianos=0,sabor="Chocolate", tipo_ingrediente= "Base",inventario=50.0),
+                Ingredientes(id_ingrediente=4, nombre="Helado de Vainilla", precio=1200, numero_calorias=300,es_vegetarianos=0,sabor="Vainilla", tipo_ingrediente= "Base",inventario=50.0),
                 
                 #Complementos
-                Ingredientes(id_ingrediente=5, nombre="Chispas de chocolate", precio=500, numero_calorias=500,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=6, nombre="Mani Japonés", precio=900, numero_calorias=200,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=7, nombre="Chantilli", precio=800, numero_calorias=300,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=8, nombre="Galletas", precio=1000, numero_calorias=430,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=9, nombre="Leche", precio=700, numero_calorias=50,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=10, nombre="Trozos Mandarina", precio=200, numero_calorias=10,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=11, nombre="Trozos Cereza", precio=200, numero_calorias=10,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento")
+                Ingredientes(id_ingrediente=5, nombre="Chispas de chocolate", precio=500, numero_calorias=500,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento",inventario=50.0),
+                Ingredientes(id_ingrediente=6, nombre="Mani Japonés", precio=900, numero_calorias=200,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento",inventario=50.0),
+                Ingredientes(id_ingrediente=7, nombre="Chantilli", precio=800, numero_calorias=300,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento",inventario=50.0),
+                Ingredientes(id_ingrediente=8, nombre="Galletas", precio=1000, numero_calorias=430,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento",inventario=50.0),
+                Ingredientes(id_ingrediente=9, nombre="Leche", precio=700, numero_calorias=50,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento",inventario=50.0),
+                Ingredientes(id_ingrediente=10, nombre="Trozos Mandarina", precio=200, numero_calorias=10,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento",inventario=50.0),
+                Ingredientes(id_ingrediente=11, nombre="Trozos Cereza", precio=200, numero_calorias=10,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento",inventario=50.0)
                 
                 
 

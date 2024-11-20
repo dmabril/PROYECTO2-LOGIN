@@ -20,6 +20,8 @@
                 <th>Sabor</th>
                 <th>Tipo Ingrediente</th>
                 <th>Es Sano</th>
+                <th>Inventario</th>
+                <th>Abastecer</th>
             </tr>
         </thead>
         <tbody>
@@ -38,6 +40,13 @@
                     {% else %}
                         No Sano
                     {% endif %}
+                </td>
+                <td>{{ ingrediente.inventario }}</td>
+                <td>
+                    <!-- Formulario para abastecer el ingrediente -->
+                    <form action="/abastecer/{{ ingrediente.id_ingrediente }}" method="POST">
+                        <button type="submit" class="btn btn-primary">Abastecer</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

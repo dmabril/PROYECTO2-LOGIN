@@ -15,6 +15,7 @@ class Ingredientes(db.Model):
     #es_sano = db.Column(db.Boolean, nullable=False)
     sabor = db.Column(db.String(50), nullable=False) 
     tipo_ingrediente =  db.Column(db.String(50), nullable=False)
+    inventario = db.Column(db.Float, nullable=False)
 
 
     def __repr__(self):
