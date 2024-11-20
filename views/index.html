@@ -4,85 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heladería</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-
-    <div class="container mt-4">
+    <div class="container mt-5">
+        <!-- Información de la heladería -->
         <h1 class="text-center">BIENVENIDOS A {{ heladeria[0].nombre }}</h1>
         <h3 class="text-center">UBICADOS EN {{ heladeria[0].direccion }}</h3>
         <h3 class="text-center">TELEFONO: {{ heladeria[0].telefono }}</h3>
+        <br><br><br><br>
 
-        <!-- Tabla de Productos -->
-        <h3 class="mt-4">Productos</h3>
-        <table class="table table-striped mt-2">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Tipo de Vaso</th>
-                    <th>Volumen</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for producto in productos %}
-                <tr>
-                    <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.precio }}</td>
-                    <td>{{ producto.tipo_vaso }}</td>
-                    <td>{{ producto.volumen }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <!-- Mensaje de opción -->
+        <div class="d-flex justify-content-center">
+            <h3 class="text-center">Selecciona una opción:</h3>
+        </div>
 
-        <!-- Tabla de Ingredientes -->
-        <h3 class="mt-4">Ingredientes</h3>
-        <table class="table table-striped mt-2">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for ingrediente in ingredientes %}
-                <tr>
-                    <td>{{ ingrediente.nombre }}</td>
-                    <td>{{ ingrediente.precio }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-
-
-        <h2>Productos e Ingredientes</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID Producto</th>
-                    <th>Nombre Producto</th>
-                    <th>Nombre Ingrediente</th>
-                    <th>Tipo Ingrediente</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pi in productosingredientes %}
-                    <tr>
-                        <td>{{ pi.id_producto }}</td>
-                        <td>{{ pi.producto.nombre }}</td> <!-- Acceder al nombre del producto -->
-                        <td>{{ pi.ingrediente.nombre }}</td> <!-- Acceder al nombre del ingrediente -->
-                        <td>{{ pi.ingrediente.tipo_ingrediente }}</td> <!-- Acceder al tipo de ingrediente -->
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    
-    
-
-
+        <!-- Botones de navegación -->
+        <div class="d-flex justify-content-center mt-3">
+            <!-- Botón para ver ingredientes -->
+            <a href="/ingredientes" class="btn btn-primary mx-2">VER INGREDIENTES</a>
+            <!-- Botón para ver productos -->
+            <a href="/productos" class="btn btn-success mx-2">VER PRODUCTOS</a>
+        </div>
     </div>
-
 </body>
 </html>

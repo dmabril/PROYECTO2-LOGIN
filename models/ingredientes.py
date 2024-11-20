@@ -12,10 +12,12 @@ class Ingredientes(db.Model):
     precio = db.Column(db.Float, nullable=False)
     numero_calorias = db.Column(db.Float, nullable=False)
     es_vegetarianos = db.Column(db.Boolean, nullable=False)
-    es_sano = db.Column(db.Boolean, nullable=False)
+    #es_sano = db.Column(db.Boolean, nullable=False)
     sabor = db.Column(db.String(50), nullable=False) 
     tipo_ingrediente =  db.Column(db.String(50), nullable=False)
 
 
     def __repr__(self):
         return f"<Ingrediente {self.nombre}>"
+    
+

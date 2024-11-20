@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Productos</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Tipo Vaso</th>
+                    <th>Volumen</th>
+                    <th>Tipo Producto</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in productos %}
+                    <tr>
+                        <td>{{ i.id_producto }}</td>
+                        <td>{{ i.nombre }}</td>
+                        <td>{{ i.precio }}</td>
+                        <td>{{ i.tipo_vaso }}</td>
+                        <td>{{ i.volumen }}</td>
+                        <td>{{ i.tipo_producto }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Botón de Volver -->
+        <a href="/" class="btn btn-secondary mt-3">Volver</a>
+
+
+        <!-- Botón de Agregar Producto -->
+        <a href="/Productosingredientes" class="btn btn-secondary mt-3">Detalles Productos</a>
+
+    </div>
+</body>
+</html>

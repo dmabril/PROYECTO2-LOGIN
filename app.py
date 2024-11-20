@@ -6,6 +6,7 @@ from models.heladeria import Heladeria
 from models.productosingredientes import Productosingredientes
 from models.productos import Productos
 from models.ingredientes import Ingredientes
+from funciones import validacion_sano, costo_produccion_producto,producto_mas_rentable
 
 
 # Inicializamos la base de datos
@@ -44,22 +45,52 @@ def heladeria_view():
 
 # Ruta para ver productos e ingredientes
 @app.route('/Productosingredientes')
+
+#def productosingredientes_view():
+#    # Consultar todas las relaciones entre productos e ingredientes
+#    productosingredientes_lista = Productosingredientes.query.all()  
+#    return render_template('productosingredientes.html', productosingredientes=productosingredientes_lista)
+
 def productosingredientes_view():
     # Consultar todas las relaciones entre productos e ingredientes
-    productosingredientes_lista = Productosingredientes.query.all()  
-    return render_template('productosingredientes.html', productosingredientes=productosingredientes_lista)
+    productosingredientes_lista = Productosingredientes.query.all()
 
-@app.route('/Productos')
+    # Crear un diccionario para almacenar los costos de producción de cada producto
+    costos = {}
+    
+    for item in productosingredientes_lista:
+        # Obtener el costo de producción de cada producto relacionado
+        costo = costo_produccion_producto(item.id_producto)
+        costos[item.id_producto] = costo
+
+    producto_rentable, rentabilidad = producto_mas_rentable()
+
+    return render_template('productosingredientes.html', 
+                           productosingredientes=productosingredientes_lista, 
+                           costos=costos,
+                           producto_rentable=producto_rentable,
+                           rentabilidad=rentabilidad)
+
+
+@app.route('/productos')
 def productos_view():
     # Consultar todas las relaciones entre productos e ingredientes
     productos_lista = Productos.query.all()  
     return render_template('productos.html', productos=productos_lista)
-
-@app.route('/Ingredientes')
+"""
+@app.route('/ingredientes')
 def ingredientes_view():
     # Consultar todas las relaciones entre productos e ingredientes
     ingredientes_lista = Ingredientes.query.all()  
     return render_template('ingredientes.html', ingredientes=ingredientes_lista)
+"""    
+@app.route('/ingredientes')
+def ingredientes_view():
+    # Consultar todas las relaciones entre productos e ingredientes
+    ingredientes_lista = Ingredientes.query.all()
+
+    # Pasamos la lista de ingredientes y la función validacion_sano a la plantilla
+    return render_template('ingredientes.html', ingredientes=ingredientes_lista, validacion_sano=validacion_sano)
 
 # Inicializar la base de datos con datos predeterminados
 if __name__ == '__main__':
@@ -91,19 +122,19 @@ if __name__ == '__main__':
         if not Ingredientes.query.first():
             ingredientes_iniciales = [
                 #Bases
-                Ingredientes(id_ingrediente=1, nombre="Helado de Fresa", precio=1200, numero_calorias=300,es_vegetarianos=0,es_sano=1,sabor="Fresa", tipo_ingrediente= "Base"),
-                Ingredientes(id_ingrediente=2, nombre="Helado de Mandarina", precio=1200, numero_calorias=280,es_vegetarianos=0,es_sano=1,sabor="Mandarina", tipo_ingrediente= "Base"),
-                Ingredientes(id_ingrediente=3, nombre="Helado de Chocolate", precio=1500, numero_calorias=400,es_vegetarianos=0,es_sano=0,sabor="Chocolate", tipo_ingrediente= "Base"),
-                Ingredientes(id_ingrediente=4, nombre="Helado de Vainilla", precio=1200, numero_calorias=300,es_vegetarianos=0,es_sano=0,sabor="Vainilla", tipo_ingrediente= "Base"),
+                Ingredientes(id_ingrediente=1, nombre="Helado de Fresa", precio=1200, numero_calorias=300,es_vegetarianos=1,sabor="Fresa", tipo_ingrediente= "Base"),
+                Ingredientes(id_ingrediente=2, nombre="Helado de Mandarina", precio=1200, numero_calorias=280,es_vegetarianos=1,sabor="Mandarina", tipo_ingrediente= "Base"),
+                Ingredientes(id_ingrediente=3, nombre="Helado de Chocolate", precio=1500, numero_calorias=400,es_vegetarianos=0,sabor="Chocolate", tipo_ingrediente= "Base"),
+                Ingredientes(id_ingrediente=4, nombre="Helado de Vainilla", precio=1200, numero_calorias=300,es_vegetarianos=0,sabor="Vainilla", tipo_ingrediente= "Base"),
                 
                 #Complementos
-                Ingredientes(id_ingrediente=5, nombre="Chispas de chocolate", precio=500, numero_calorias=500,es_vegetarianos=0,es_sano=1,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=6, nombre="Mani Japonés", precio=900, numero_calorias=200,es_vegetarianos=0,es_sano=1,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=7, nombre="Chantilli", precio=800, numero_calorias=300,es_vegetarianos=0,es_sano=0,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=8, nombre="Galletas", precio=1000, numero_calorias=430,es_vegetarianos=0,es_sano=0,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=9, nombre="Leche", precio=700, numero_calorias=200,es_vegetarianos=0,es_sano=1,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=10, nombre="Trozos Mandarina", precio=200, numero_calorias=100,es_vegetarianos=1,es_sano=1,sabor="", tipo_ingrediente= "Complemento"),
-                Ingredientes(id_ingrediente=11, nombre="Trozos Cereza", precio=200, numero_calorias=100,es_vegetarianos=1,es_sano=1,sabor="", tipo_ingrediente= "Complemento")
+                Ingredientes(id_ingrediente=5, nombre="Chispas de chocolate", precio=500, numero_calorias=500,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
+                Ingredientes(id_ingrediente=6, nombre="Mani Japonés", precio=900, numero_calorias=200,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento"),
+                Ingredientes(id_ingrediente=7, nombre="Chantilli", precio=800, numero_calorias=300,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
+                Ingredientes(id_ingrediente=8, nombre="Galletas", precio=1000, numero_calorias=430,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
+                Ingredientes(id_ingrediente=9, nombre="Leche", precio=700, numero_calorias=50,es_vegetarianos=0,sabor="", tipo_ingrediente= "Complemento"),
+                Ingredientes(id_ingrediente=10, nombre="Trozos Mandarina", precio=200, numero_calorias=10,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento"),
+                Ingredientes(id_ingrediente=11, nombre="Trozos Cereza", precio=200, numero_calorias=10,es_vegetarianos=1,sabor="", tipo_ingrediente= "Complemento")
                 
                 
 
